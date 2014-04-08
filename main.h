@@ -3,9 +3,13 @@
 
 extern unsigned int g_events;
 
-#define EV_TIMER1 0x01
-#define EV_TIMER2 0x02
-#define EV_TIMER3 0x04
+#define EV_TIMER1 0x0001
+#define EV_TIMER2 0x0002
+#define EV_TIMER3 0x0004
+#define EV_PORT1  0x0008
+#define EV_PORT2  0x0010
+#define EV_TX     0x0020
+#define EV_RX     0x0040
 
 typedef void (*callback)(void);
 
