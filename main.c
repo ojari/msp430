@@ -83,7 +83,23 @@ int main()
 {
 	WDTCTL = WDTPW + WDTHOLD;              // Stop watchdog timer
 
+	// Init timer1
+	//
+	CCTL0  = CCIE;
+	TA0CTL = TASSEL_2 + MC_1 + ID_3; // SMCLK, up to CCR0, divider /8
+
+	// Init timer2
+	//
+	CCTL1  = CCIE;
+	TA1CTL = TASSEL_1 + MC_1; // ACLK, up to CCR1
+
+	// main loop
+	//
+	__enable_interrupt();
 	while (1) {
+		if (g_event == 0)
+			_BIS_SR(LPM0_bits + GIE);
+
 		if (g_event & EV_TIMER1) {
 			cb_timer1();
 			g_event &= ~EV_TIMER1;
