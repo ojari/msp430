@@ -1,3 +1,6 @@
+/**
+ * Copyright 2014 Jari Ojanen
+ */
 #ifndef _MAIN_H
 #define _MAIN_H
 
