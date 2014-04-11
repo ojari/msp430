@@ -1,10 +1,16 @@
-#ifndef _CONFIG_H
-#define _CONFIG_H
+#ifndef _PORT_H
+#define _PORT_H
 
-extern void config_port_init ();
+extern void port_init ();
 #define set_LED_GREEN P1OUT |= BIT0
 #define clr_LED_GREEN P1OUT &= ~BIT0
 #define toggle_LED_GREEN P1OUT ^= BIT0
+#define set_OW1 P1OUT |= BIT3
+#define clr_OW1 P1OUT &= ~BIT3
+#define toggle_OW1 P1OUT ^= BIT3
+#define get_OW1 (P1IN & BIT3) == BIT3
+#define out_OW1 P1DIR |= BIT3
+#define in_OW1 P1DIR &= ~BIT3
 #define set_LCD_RS P1OUT |= BIT5
 #define clr_LCD_RS P1OUT &= ~BIT5
 #define toggle_LCD_RS P1OUT ^= BIT5
