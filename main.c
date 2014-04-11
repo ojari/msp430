@@ -4,12 +4,12 @@
 #include <msp430.h>
 #include <stdio.h>
 #include "main.h"
+#include "port.h"
 
 unsigned int g_event = 0;
 
 callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
-callback cb_timer3 = NULL;
 
 unsigned char g_rtc_sec = 0;
 unsigned char g_rtc_min = 0;
@@ -98,6 +98,7 @@ int main()
 
 	// main loop
 	//
+	port_init();
 	__enable_interrupt();
 	while (1) {
 		if (g_event == 0)
