@@ -21,14 +21,14 @@ __attribute__ ((__interrupt__(TIMER0_A0_VECTOR)))
 static void timer1_isr()
 {
 	g_event |= EV_TIMER1;
-	__bic_SR_register_on_exit(LPM4_bits);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__ ((__interrupt__(TIMER1_A0_VECTOR)))
 static void timer2_isr()
 {
 	g_event |= EV_TIMER2;
-	__bic_SR_register_on_exit(LPM4_bits);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__ ((__interrupt__(WDT_VECTOR)))
@@ -57,52 +57,61 @@ __attribute__((__interrupt__(PORT1_VECTOR)))
 static void port1_isr()
 {
 	g_event |= EV_PORT1;
-	__bic_SR_register_on_exit(LPM4_bits | GIE);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__((__interrupt__(PORT2_VECTOR)))
 static void port2_isr()
 {
 	g_event |= EV_PORT2;
-	__bic_SR_register_on_exit(LPM4_bits | GIE);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__((__interrupt__(USCIAB0TX_VECTOR)))
 static void usci_tx_isr()
 {
 	g_event |= EV_TX;
-	__bic_SR_register_on_exit(LPM4_bits | GIE);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__((__interrupt__(USCIAB0RX_VECTOR)))
 static void usci_rx_isr()
 {
 	g_event |= EV_RX;
-	__bic_SR_register_on_exit(LPM4_bits | GIE);
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 //------------------------------------------------------------------------------
 int main()
 {
 	WDTCTL = WDTPW + WDTHOLD;              // Stop watchdog timer
+	BCSCTL3 |= LFXT1S_2;                // VLOCLK
+
+	BCSCTL1 = CALBC1_1MHZ;                 // Set DCO to calibrated 1 MHz.
+	DCOCTL = CALDCO_1MHZ;
 
 	// Init timer1
 	//
-	CCTL0  = CCIE;
-	TA0CTL = TASSEL_2 + MC_1 + ID_3; // SMCLK, up to CCR0, divider /8
+	TA0CCR0   = 0x7FFF;
+	TA0CCTL0  = CCIE;
+	TA0CTL = TASSEL_1 + MC_1 + ID_0; // SMCLK, up to CCR0, divider /8
 
 	// Init timer2
 	//
-	CCTL1  = CCIE;
-	TA1CTL = TASSEL_1 + MC_1; // ACLK, up to CCR1
+	TA1CCR0   = 0x3FFF;
+	TA1CCTL0  = CCIE;
+	TA1CTL = TASSEL_1 + MC_1 + ID_0; // SMCLK, up to CCR0, divider /8
+
 
 	// main loop
 	//
 	port_init();
-	__enable_interrupt();
+	app_init();
+
+	//__enable_interrupt();
 	while (1) {
 		if (g_event == 0)
-			_BIS_SR(LPM0_bits + GIE);
+			__bis_SR_register(LPM0_bits + GIE);
 
 		if (g_event & EV_TIMER1) {
 			cb_timer1();
