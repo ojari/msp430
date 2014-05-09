@@ -10,6 +10,7 @@ unsigned int g_event = 0;
 
 callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
+callback cb_timer3 = NULL;
 
 unsigned char g_rtc_sec = 0;
 unsigned char g_rtc_min = 0;
@@ -50,7 +51,9 @@ static void timer3_isr()
 			}
 		}
 	}
-	//	__bic_SR_register_on_exit(LPM4_bits);
+	//toggle_LED_RED;
+	g_event |= EV_TIMER3;
+	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 __attribute__((__interrupt__(PORT1_VECTOR)))
@@ -102,6 +105,10 @@ int main()
 	TA1CCTL0  = CCIE;
 	TA1CTL = TASSEL_1 + MC_1 + ID_0; // SMCLK, up to CCR0, divider /8
 
+	// Init timer3
+	//
+	WDTCTL = WDT_ADLY_1000;
+	IE1 |= WDTIE;
 
 	// main loop
 	//
@@ -114,12 +121,19 @@ int main()
 			__bis_SR_register(LPM0_bits + GIE);
 
 		if (g_event & EV_TIMER1) {
-			cb_timer1();
+			if (cb_timer1)
+				cb_timer1();
 			g_event &= ~EV_TIMER1;
 		}
 		if (g_event & EV_TIMER2) {
-			cb_timer2();
+			if (cb_timer2)
+				cb_timer2();
 			g_event &= ~EV_TIMER2;
+		}
+		if (g_event & EV_TIMER3) {
+			if (cb_timer3)
+				cb_timer3();
+			g_event &= ~EV_TIMER3;
 		}
 			
 	}

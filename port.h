@@ -2,9 +2,9 @@
 #define _PORT_H
 
 extern void port_init ();
-#define set_LED_GREEN P1OUT |= BIT0
-#define clr_LED_GREEN P1OUT &= ~BIT0
-#define toggle_LED_GREEN P1OUT ^= BIT0
+#define set_LED_RED P1OUT |= BIT0
+#define clr_LED_RED P1OUT &= ~BIT0
+#define toggle_LED_RED P1OUT ^= BIT0
 #define set_OW1 P1OUT |= BIT3
 #define clr_OW1 P1OUT &= ~BIT3
 #define toggle_OW1 P1OUT ^= BIT3

@@ -11,3 +11,7 @@ Blink launchpad leds
 # demo2
 
 Write a couple of characters into HD44780 LCD screen.
+
+# demo3
+
+Using watchdog as a timer.
