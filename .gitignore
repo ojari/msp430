@@ -1,5 +1,10 @@
 *~
 *.o
+*.o2
 /demo.map
 /demo.hex
 /demo.elf
+/.project
+/sim/demo.map
+/sim/demo
+/.cproject

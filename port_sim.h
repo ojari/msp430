@@ -1,0 +1,32 @@
+#ifndef _PORT_SIM_H
+#define _PORT_SIM_H
+
+#define set_LED_RED bit_set("LED_RED")
+#define clr_LED_RED bit_clr("LED_RED")
+#define toggle_LED_RED bit_toggle("LED_RED")
+#define set_OW1 bit_set("OW1")
+#define clr_OW1 bit_clr("OW1")
+#define toggle_OW1 bit_toggle("OW1")
+#define set_ bit_set("")
+#define clr_ bit_clr("")
+#define toggle_ bit_toggle("")
+#define set_LCD_RS bit_set("LCD_RS")
+#define clr_LCD_RS bit_clr("LCD_RS")
+#define toggle_LCD_RS bit_toggle("LCD_RS")
+#define set_LCD_ENABLE bit_set("LCD_ENABLE")
+#define clr_LCD_ENABLE bit_clr("LCD_ENABLE")
+#define toggle_LCD_ENABLE bit_toggle("LCD_ENABLE")
+#define set_LCD_DATA1 bit_set("LCD_DATA1")
+#define clr_LCD_DATA1 bit_clr("LCD_DATA1")
+#define toggle_LCD_DATA1 bit_toggle("LCD_DATA1")
+#define set_LCD_DATA2 bit_set("LCD_DATA2")
+#define clr_LCD_DATA2 bit_clr("LCD_DATA2")
+#define toggle_LCD_DATA2 bit_toggle("LCD_DATA2")
+#define set_LCD_DATA3 bit_set("LCD_DATA3")
+#define clr_LCD_DATA3 bit_clr("LCD_DATA3")
+#define toggle_LCD_DATA3 bit_toggle("LCD_DATA3")
+#define set_LCD_DATA4 bit_set("LCD_DATA4")
+#define clr_LCD_DATA4 bit_clr("LCD_DATA4")
+#define toggle_LCD_DATA4 bit_toggle("LCD_DATA4")
+
+#endif

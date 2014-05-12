@@ -26,4 +26,10 @@ extern void app_init();
 #define START_TIMER2(delay,fn) TA1CCR0 = delay; cb_timer2 = fn
 #define START_TIMER3(fn) cb_timer3 = fn
 
+#ifdef _SIMULATED_
+extern void bit_set(const char*);
+extern void bit_clr(const char*);
+extern void bit_toggle(const char*);
+#endif
+
 #endif
