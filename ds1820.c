@@ -31,8 +31,8 @@ void ds1820_reset(uint8_t pin)
 	delay_us(90);   // wait for DS1820 to send presence
 	presence = config_port_read(pin);
 	delay_us(410);
-	if (presence)
-		usart_str("E DS1 0\r\n");
+	//if (presence)
+	//	usart_str("E DS1 0\r\n");
 	//else
 	//	usart_str("DS1 found\r\n");
 	config_port_mode(pin, MODE_OUTPUT);

@@ -4,7 +4,7 @@
 #include <msp430.h>
 #include <stdio.h>
 #include "main.h"
-#include "port.h"
+#include "config.h"
 
 unsigned int g_event = 0;
 
@@ -112,7 +112,7 @@ int main()
 
 	// main loop
 	//
-	port_init();
+	config_port_init();
 	app_init();
 
 	//__enable_interrupt();

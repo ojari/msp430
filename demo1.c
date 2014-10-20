@@ -6,7 +6,7 @@
 #include <msp430.h>
 #include <stdio.h>
 #include "main.h"
-#include "port.h"
+#include "config.h"
 
 void timer1()
 {

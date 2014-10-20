@@ -1,7 +1,11 @@
-#ifndef _PORT_H
-#define _PORT_H
+#ifndef _CONFIG_H
+#define _CONFIG_H
 
-extern void port_init ();
+extern void config_port_init (void);
+extern void config_port_set (uint8_t pin);
+extern void config_port_clear (uint8_t pin);
+extern void config_port_mode (uint8_t pin, uint8_t out);
+extern uint8_t config_port_read (uint8_t pin);
 #define set_LED_RED P1OUT |= BIT0
 #define clr_LED_RED P1OUT &= ~BIT0
 #define toggle_LED_RED P1OUT ^= BIT0
