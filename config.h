@@ -24,6 +24,9 @@ extern uint8_t config_port_read (uint8_t pin);
 #define set_LCD_ENABLE P1OUT |= BIT7
 #define clr_LCD_ENABLE P1OUT &= ~BIT7
 #define toggle_LCD_ENABLE P1OUT ^= BIT7
+#define set_NEXA_OUT P2OUT |= BIT0
+#define clr_NEXA_OUT P2OUT &= ~BIT0
+#define toggle_NEXA_OUT P2OUT ^= BIT0
 #define set_LCD_DATA1 P2OUT |= BIT2
 #define clr_LCD_DATA1 P2OUT &= ~BIT2
 #define toggle_LCD_DATA1 P2OUT ^= BIT2

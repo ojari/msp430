@@ -84,6 +84,30 @@ static void usci_rx_isr()
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+void uart_init()
+{
+#define TX BIT2
+#define RX BIT1
+
+	P1SEL  |= RX + TX;
+	P1SEL2 |= RX + TX;
+
+	UCA0CTL1 |= UCSSEL_2; // SMCLK
+	UCA0BR0 = 0x08;
+	UCA0BR1 = 0x00;
+	UCA0MCTL = UCBRS2 + UCBRS0; // modulation
+	UCA0CTL1 &= ~UCSWRST;
+	UC0IE |= UCA0RXIE;
+}
+
+void uart_str(char *str)
+{
+    while(*str) {
+		while ( !(IFG2 & UCA0TXIFG));
+		UCA0TXBUF = *str;
+        str++;
+    }
+}
 //------------------------------------------------------------------------------
 int main()
 {
@@ -110,10 +134,15 @@ int main()
 	WDTCTL = WDT_ADLY_1000;
 	IE1 |= WDTIE;
 
+	uart_init();
+
 	// main loop
 	//
 	config_port_init();
 	app_init();
+
+
+	uart_str("main\n");
 
 	//__enable_interrupt();
 	while (1) {

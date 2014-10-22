@@ -21,6 +21,7 @@ extern callback cb_timer2;
 extern callback cb_timer3;
 
 extern void app_init();
+extern void uart_str(char *str);
 
 #define START_TIMER1(delay,fn) TA0CCR0 = delay; cb_timer1 = fn
 #define START_TIMER2(delay,fn) TA1CCR0 = delay; cb_timer2 = fn
