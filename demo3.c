@@ -8,7 +8,7 @@
 #include "main.h"
 #include "port_sim.h"
 #else
-#include <msp430.h>
+#include "hw.h"
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
@@ -20,6 +20,12 @@
 void timer3()
 {
 	uart_str("ping\n");
+	uart_num(g_rtc_hour);
+	uart_str(":");
+	uart_num(g_rtc_min);
+	uart_str(":");
+	uart_num(g_rtc_sec);
+	uart_str("\r\n");
 
 	toggle_LED_RED;
 

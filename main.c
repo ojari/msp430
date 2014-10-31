@@ -1,7 +1,7 @@
 /**
  * Copyright 2014 Jari Ojanen
  */
-#include <msp430.h>
+#include "hw.h"
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
@@ -12,28 +12,42 @@ callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
 callback cb_timer3 = NULL;
 
-unsigned char g_rtc_sec = 0;
-unsigned char g_rtc_min = 0;
-unsigned char g_rtc_hour = 0;
 unsigned char g_rtc_wday = 0;
+unsigned char g_rtc_hour = 22;
+unsigned char g_rtc_min = 16;
+unsigned char g_rtc_sec = 0;
 
-
+#ifdef GCC
 __attribute__ ((__interrupt__(TIMER0_A0_VECTOR)))
 static void timer1_isr()
+#else
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void timer1_isr(void)
+#endif
 {
 	g_event |= EV_TIMER1;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__ ((__interrupt__(TIMER1_A0_VECTOR)))
 static void timer2_isr()
+#else
+#pragma vector=TIMER1_A0_VECTOR
+__interrupt void timer2_isr(void)
+#endif
 {
 	g_event |= EV_TIMER2;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__ ((__interrupt__(WDT_VECTOR)))
 static void timer3_isr()
+#else
+#pragma vector=WDT_VECTOR
+__interrupt void timer3_isr(void)
+#endif
 {
 	g_rtc_sec++;
 	if (g_rtc_sec > 59) {
@@ -56,29 +70,49 @@ static void timer3_isr()
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(PORT1_VECTOR)))
 static void port1_isr()
+#else
+#pragma vector=PORT1_VECTOR
+__interrupt void port1_isr(void)
+#endif
 {
 	g_event |= EV_PORT1;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(PORT2_VECTOR)))
 static void port2_isr()
+#else
+#pragma vector=PORT2_VECTOR
+__interrupt void port2_isr(void)
+#endif
 {
 	g_event |= EV_PORT2;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(USCIAB0TX_VECTOR)))
 static void usci_tx_isr()
+#else
+#pragma vector=USCIAB0TX_VECTOR
+__interrupt void usci_tx_isr(void)
+#endif
 {
 	g_event |= EV_TX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(USCIAB0RX_VECTOR)))
 static void usci_rx_isr()
+#else
+#pragma vector=USCIAB0RX_VECTOR
+__interrupt void usci_rx_isr(void)
+#endif
 {
 	g_event |= EV_RX;
 	__bic_SR_register_on_exit(LPM0_bits);
@@ -100,22 +134,52 @@ void uart_init()
 	UC0IE |= UCA0RXIE;
 }
 
+void uart_ch(char ch)
+{
+	while ( !(IFG2 & UCA0TXIFG));
+	UCA0TXBUF = ch;
+}
+
 void uart_str(char *str)
 {
     while(*str) {
-		while ( !(IFG2 & UCA0TXIFG));
-		UCA0TXBUF = *str;
+		uart_ch(*str);
         str++;
     }
 }
+
+void uart_num(uint8_t num)
+{
+	char digit0, digit1, digit2='0';
+	digit0 = '0'+(num % 10);
+	num /= 10;
+	digit1 = '0'+(num % 10);
+	if (num > 10) {
+		num /= 10;
+		digit2 = '0'+(num % 10);
+		uart_ch(digit2);
+	}
+	uart_ch(digit1);
+	uart_ch(digit0);
+}
+
 //------------------------------------------------------------------------------
 int main()
 {
 	WDTCTL = WDTPW + WDTHOLD;              // Stop watchdog timer
-	BCSCTL3 |= LFXT1S_2;                // VLOCLK
 
 	BCSCTL1 = CALBC1_1MHZ;                 // Set DCO to calibrated 1 MHz.
 	DCOCTL = CALDCO_1MHZ;
+
+	BCSCTL3 = XT2S_0 | LFXT1S_0 | XCAP_2;
+
+	// Wait xtal to be stable
+	//
+	do {
+		IFG1 &= ~OFIFG;      // Clear OSC fault flag
+	    __delay_cycles(50);  // 50us delay
+	} while (IFG1 & OFIFG);
+
 
 	// Init timer1
 	//
