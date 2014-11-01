@@ -13,8 +13,8 @@ callback cb_timer2 = NULL;
 callback cb_timer3 = NULL;
 
 unsigned char g_rtc_wday = 0;
-unsigned char g_rtc_hour = 22;
-unsigned char g_rtc_min = 16;
+unsigned char g_rtc_hour = 17;
+unsigned char g_rtc_min = 40;
 unsigned char g_rtc_sec = 0;
 
 #ifdef GCC
@@ -131,7 +131,7 @@ void uart_init()
 	UCA0BR1 = 0x00;
 	UCA0MCTL = UCBRS2 + UCBRS0; // modulation
 	UCA0CTL1 &= ~UCSWRST;
-	UC0IE |= UCA0RXIE;
+	//UC0IE |= UCA0RXIE;
 }
 
 void uart_ch(char ch)
