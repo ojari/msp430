@@ -82,6 +82,13 @@ uint8_t ds1820_read(uint8_t pin)
 	return ret;
 }
 
+void ds1820_measure(uint8_t pin)
+{
+	ds1820_reset(pin);
+	ds1820_write(pin, DS1820_CMD_SKIP_ROM);
+	ds1820_write(pin, DS1820_CMD_CONVERT);
+}
+
 // based on DS18S20 OPERATION EXAMPLE 3
 //
 uint8_t ds1820_read_temp(uint8_t pin)
@@ -93,10 +100,10 @@ uint8_t ds1820_read_temp(uint8_t pin)
 	uint8_t count_per_c;
 #endif
 
-	ds1820_reset(pin);
+	/*ds1820_reset(pin);
 	ds1820_write(pin, DS1820_CMD_SKIP_ROM);
 	ds1820_write(pin, DS1820_CMD_CONVERT);
-	delay_ms(750);
+	delay_ms(750);*/
 	ds1820_reset(pin);
 	ds1820_write(pin, DS1820_CMD_SKIP_ROM);
 	delay_us(3);
