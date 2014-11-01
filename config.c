@@ -11,6 +11,36 @@ void config_port_set (uint8_t pin)
 {
 	switch (pin)
 	{
+		case PIN_LED_RED:
+			P1OUT |= BIT0;
+			break;
+		case PIN_OW1:
+			P1OUT |= BIT3;
+			break;
+		case PIN_LCD_RS:
+			P1OUT |= BIT5;
+			break;
+		case PIN_LED_GREEN:
+			P1OUT |= BIT6;
+			break;
+		case PIN_LCD_ENABLE:
+			P1OUT |= BIT7;
+			break;
+		case PIN_NEXA_OUT:
+			P2OUT |= BIT0;
+			break;
+		case PIN_LCD_DATA1:
+			P2OUT |= BIT2;
+			break;
+		case PIN_LCD_DATA2:
+			P2OUT |= BIT3;
+			break;
+		case PIN_LCD_DATA3:
+			P2OUT |= BIT4;
+			break;
+		case PIN_LCD_DATA4:
+			P2OUT |= BIT5;
+			break;
 	}
 }
 
@@ -18,6 +48,36 @@ void config_port_clear (uint8_t pin)
 {
 	switch (pin)
 	{
+		case PIN_LED_RED:
+			P1OUT &= ~BIT0;
+			break;
+		case PIN_OW1:
+			P1OUT &= ~BIT3;
+			break;
+		case PIN_LCD_RS:
+			P1OUT &= ~BIT5;
+			break;
+		case PIN_LED_GREEN:
+			P1OUT &= ~BIT6;
+			break;
+		case PIN_LCD_ENABLE:
+			P1OUT &= ~BIT7;
+			break;
+		case PIN_NEXA_OUT:
+			P2OUT &= ~BIT0;
+			break;
+		case PIN_LCD_DATA1:
+			P2OUT &= ~BIT2;
+			break;
+		case PIN_LCD_DATA2:
+			P2OUT &= ~BIT3;
+			break;
+		case PIN_LCD_DATA3:
+			P2OUT &= ~BIT4;
+			break;
+		case PIN_LCD_DATA4:
+			P2OUT &= ~BIT5;
+			break;
 	}
 }
 
