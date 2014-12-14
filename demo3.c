@@ -15,6 +15,7 @@
 #include "lcd.h"
 #include "ds1820.h"
 #include "nexa.h"
+#include "uart.h"
 #endif
 
 uint8_t stage;

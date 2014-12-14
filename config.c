@@ -91,14 +91,14 @@ void config_port_mode (uint8_t pin, uint8_t out)
 {
 	switch (pin)
 	{
-		case OW1:
+		case PIN_OW1:
 			P1DIR &= ~BIT3;
 			if (out)
 			{
 				P1DIR |= BIT3;
 			}
 			break;
-		case OW2:
+		case PIN_OW2:
 			P1DIR &= ~BIT4;
 			if (out)
 			{
