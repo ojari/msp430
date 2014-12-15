@@ -21,7 +21,8 @@ void uart_init()
 	UCA0BR1 = 0x00;
 	UCA0MCTL = UCBRS2 + UCBRS0; // modulation
 	UCA0CTL1 &= ~UCSWRST;
-	//UC0IE |= UCA0RXIE;
+
+	IFG2 &= ~(UCA0TXIFG | UCA0RXIFG);
 }
 
 void uart_clear()
@@ -32,7 +33,19 @@ void uart_clear()
 
 void uart_start()
 {
+	UC0IE |= UCA0TXIE;
 	UCA0TXBUF = *(uart_ptr);
+}
+
+void uart_tx()
+{
+	if (uart_ptr != uart_size) {
+		uart_ptr++;
+		UCA0TXBUF = *(uart_ptr);
+	}
+	else {
+		UC0IE &= ~UCA0TXIE;
+	}
 }
 
 void uart_ch(char ch)

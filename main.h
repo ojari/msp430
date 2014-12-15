@@ -19,6 +19,7 @@ typedef void (*callback)(void);
 extern callback cb_timer1;
 extern callback cb_timer2;
 extern callback cb_timer3;
+extern callback cb_uart_tx;
 
 extern unsigned char g_rtc_sec;
 extern unsigned char g_rtc_min;

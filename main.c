@@ -12,6 +12,7 @@ unsigned int g_event = 0;
 callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
 callback cb_timer3 = NULL;
+callback cb_uart_tx = NULL;
 
 unsigned char g_rtc_wday = 0;
 unsigned char g_rtc_hour = 17;
@@ -103,6 +104,8 @@ static void usci_tx_isr()
 __interrupt void usci_tx_isr(void)
 #endif
 {
+	IFG2 &= ~UCA0TXIFG;
+
 	g_event |= EV_TX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
@@ -115,13 +118,15 @@ static void usci_rx_isr()
 __interrupt void usci_rx_isr(void)
 #endif
 {
+	IFG2 &= ~UCA0RXIFG;
+
 	g_event |= EV_RX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
 
 //------------------------------------------------------------------------------
-int main()
+void main()
 {
 	WDTCTL = WDTPW + WDTHOLD;              // Stop watchdog timer
 
@@ -185,7 +190,11 @@ int main()
 				cb_timer3();
 			g_event &= ~EV_TIMER3;
 		}
+		if (g_event & EV_TX) {
+			if (cb_uart_tx)
+				cb_uart_tx();
+			g_event &= ~EV_TX;
+		}
 			
 	}
-	return 0;
 }

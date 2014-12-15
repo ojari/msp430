@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
-#include "lcd.h"
+//#include "lcd.h"
 #include "ds1820.h"
 #include "nexa.h"
 #include "uart.h"
@@ -32,6 +32,7 @@ void timer3()
 
 	switch (stage) {
 	case 0:
+		uart_clear();
 		uart_num(g_rtc_hour);
 		uart_str(":");
 		uart_num(g_rtc_min);
@@ -40,6 +41,7 @@ void timer3()
 		uart_str("  ");
 		uart_num(temp1);
 		uart_str("\r\n");
+		uart_start();
 		break;
 	case 1:
 		ds1820_measure(DS1_PIN);
@@ -58,8 +60,8 @@ void timer3()
 		//uart_num(temp1);
 		break;
 	case 6:
-		lcd_clear();
-		lcd_str("Hello");
+		//lcd_clear();
+		//lcd_str("Hello");
 		break;
 	case 7:
 		nexa_send(NEXA_CH_1, NEXA_UNIT_1, NEXA_ON);
@@ -73,10 +75,11 @@ void timer3()
 
 void app_init()
 {
-	START_TIMER3(timer3);	
+	START_TIMER3(timer3);
+	cb_uart_tx = uart_tx;
 	stage = 0;
 	nexa_init();
-	lcd_init();
+	//lcd_init();
 	ds1820_init(DS1_PIN);
 	ds1820_init(DS2_PIN);
 }
