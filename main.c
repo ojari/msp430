@@ -138,7 +138,7 @@ void main()
 	// Wait xtal to be stable
 	//
 	do {
-		IFG1 &= ~OFIFG;      // Clear OSC fault flag
+	    IFG1 &= ~OFIFG;      // Clear OSC fault flag
 	    __delay_cycles(50);  // 50us delay
 	} while (IFG1 & OFIFG);
 
@@ -166,9 +166,6 @@ void main()
 	//
 	config_port_init();
 	app_init();
-
-
-	uart_str("main\n");
 
 	//__enable_interrupt();
 	while (1) {

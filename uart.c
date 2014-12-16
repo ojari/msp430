@@ -1,12 +1,14 @@
 #include "hw.h"
 #include "uart.h"
 
-#define UART_BUFFER_SIZE 80
+#define UART_BUFFER_SIZE 60
 
 uint8_t *uart_size = 0;
 uint8_t *uart_ptr = 0;
 
 uint8_t uart_buffer[UART_BUFFER_SIZE];
+
+char hexDigit[] = "0123456789ABCDEF";
 
 void uart_init()
 {
@@ -69,7 +71,10 @@ void uart_str(char *str)
 
 void uart_num(uint8_t num)
 {
-	char digit0, digit1, digit2='0';
+	uart_ch(hexDigit[num >> 4]);
+	uart_ch(hexDigit[num & 0x0F]);
+
+/*	char digit0, digit1, digit2='0';  // add decimal number implementation
 	digit0 = '0'+(num % 10);
 	num /= 10;
 	digit1 = '0'+(num % 10);
@@ -80,4 +85,5 @@ void uart_num(uint8_t num)
 	}
 	uart_ch(digit1);
 	uart_ch(digit0);
+	*/
 }

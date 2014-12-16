@@ -33,13 +33,17 @@ void timer3()
 	switch (stage) {
 	case 0:
 		uart_clear();
+		uart_ch('m');
+		/*
 		uart_num(g_rtc_hour);
 		uart_str(":");
 		uart_num(g_rtc_min);
-		uart_str(":");
+		uart_str(":");*/
 		uart_num(g_rtc_sec);
-		uart_str("  ");
+		uart_ch(' ');
 		uart_num(temp1);
+		uart_ch(' ');
+		uart_num(temp2);
 		uart_str("\r\n");
 		uart_start();
 		break;
