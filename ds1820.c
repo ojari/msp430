@@ -24,13 +24,13 @@ void ds1820_reset(uint8_t pin)
 	// do reset
 	config_port_clear(pin);
 	delay_us(500);   // min 480us
-	config_port_set(pin);
+	//config_port_set(pin);
 	config_port_mode(pin, MODE_INPUT);
 
 	// do presense
-	delay_us(90);   // wait for DS1820 to send presence
+	delay_us(80);   // wait for DS1820 to send presence
 	presence = config_port_read(pin);
-	delay_us(410);
+	delay_us(300);
 	//if (presence)
 	//	usart_str("E DS1 0\r\n");
 	//else
@@ -65,6 +65,7 @@ uint8_t ds1820_read(uint8_t pin)
 	config_port_set(pin);
 	delay_us(2);
 	for (i=1; i; i<<=1) {
+	        delay_us(1);
 		config_port_clear(pin);
 		delay_us(4);
 		config_port_mode(pin, MODE_INPUT);

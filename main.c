@@ -39,6 +39,8 @@ static void timer2_isr()
 __interrupt void timer2_isr(void)
 #endif
 {
+	TA1CCTL0 &= ~CCIFG;
+
 	g_event |= EV_TIMER2;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
