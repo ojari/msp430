@@ -15,12 +15,12 @@ extern uint8_t config_port_read (uint8_t pin);
 #define get_OW1 (P1IN & BIT3) == BIT3
 #define out_OW1 P1DIR |= BIT3
 #define in_OW1 P1DIR &= ~BIT3
-#define set_ P1OUT |= BIT5
-#define clr_ P1OUT &= ~BIT5
-#define toggle_ P1OUT ^= BIT5
-#define set_LCD_RS P1OUT |= BIT6
-#define clr_LCD_RS P1OUT &= ~BIT6
-#define toggle_LCD_RS P1OUT ^= BIT6
+#define set_LCD_RS P1OUT |= BIT5
+#define clr_LCD_RS P1OUT &= ~BIT5
+#define toggle_LCD_RS P1OUT ^= BIT5
+#define set_LED_GREEN P1OUT |= BIT6
+#define clr_LED_GREEN P1OUT &= ~BIT6
+#define toggle_LED_GREEN P1OUT ^= BIT6
 #define set_LCD_ENABLE P1OUT |= BIT7
 #define clr_LCD_ENABLE P1OUT &= ~BIT7
 #define toggle_LCD_ENABLE P1OUT ^= BIT7

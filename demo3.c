@@ -17,14 +17,25 @@
 #include "nexa.h"
 #endif
 
+void timer1()
+{
+	toggle_LED_GREEN;
+}
+
 void timer3()
 {
-	uart_str("ping\n");
+	uart_str("ping");
+	uart_num(g_rtc_hour);
+	uart_str(":");
+	uart_num(g_rtc_min);
+	uart_str(":");
+	uart_num(g_rtc_sec);
+	uart_str("\n");
 
 	toggle_LED_RED;
 
-	ds1820_init(0);
-	ds1820_read_temp(0);
+	//	ds1820_init(0);
+	//	ds1820_read_temp(0);
 
 	lcd_str("Hello");
 
@@ -33,6 +44,7 @@ void timer3()
 
 void app_init()
 {
+	START_TIMER1(0x7FFF, timer1);
 	START_TIMER3(timer3);	
 
 	nexa_init();

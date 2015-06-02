@@ -12,10 +12,10 @@ callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
 callback cb_timer3 = NULL;
 
-unsigned char g_rtc_sec = 0;
-unsigned char g_rtc_min = 0;
-unsigned char g_rtc_hour = 0;
 unsigned char g_rtc_wday = 0;
+unsigned char g_rtc_hour = 22;
+unsigned char g_rtc_min = 0;
+unsigned char g_rtc_sec = 0;
 
 
 __attribute__ ((__interrupt__(TIMER0_A0_VECTOR)))
@@ -93,11 +93,18 @@ void uart_init()
 	P1SEL2 |= RX + TX;
 
 	UCA0CTL1 |= UCSSEL_2; // SMCLK
-	UCA0BR0 = 0x08;
-	UCA0BR1 = 0x00;
-	UCA0MCTL = UCBRS2 + UCBRS0; // modulation
+	UCA0BR0 = 104;        // 9600 baud
+	UCA0BR1 = 0;
+	UCA0MCTL = UCBRS0; // modulation
+	//UCA0MCTL = UCBRS2 + UCBRS0; // modulation
 	UCA0CTL1 &= ~UCSWRST;
 	UC0IE |= UCA0RXIE;
+}
+
+void uart_ch(char ch)
+{
+	while ( !(IFG2 & UCA0TXIFG));
+	UCA0TXBUF = ch;
 }
 
 void uart_str(char *str)
@@ -108,26 +115,63 @@ void uart_str(char *str)
         str++;
     }
 }
+
+void uart_num(uint8_t num)
+{
+	char digit0, digit1, digit2='0';
+
+	digit0 = '0'+(num % 10);
+	num /= 10;
+	digit1 = '0'+(num % 10);
+
+	if (num > 10) {
+		num /= 10;
+		digit2 = '0'+(num % 10);
+		uart_ch(digit2);
+	}
+	uart_ch(digit1);
+	uart_ch(digit0);
+}
+
 //------------------------------------------------------------------------------
 int main()
 {
-	WDTCTL = WDTPW + WDTHOLD;              // Stop watchdog timer
-	BCSCTL3 |= LFXT1S_2;                // VLOCLK
-
-	BCSCTL1 = CALBC1_1MHZ;                 // Set DCO to calibrated 1 MHz.
+	WDTCTL = WDTPW + WDTHOLD;             // Stop watchdog timer
+#if 1
+	BCSCTL2 = SELM_0 | DIVM_0 | DIVS_0;
+	DCOCTL = 0x00;
+	BCSCTL1 = CALBC1_1MHZ;
 	DCOCTL = CALDCO_1MHZ;
 
+	BCSCTL1 |= XT2OFF | DIVA_0;
+	BCSCTL3 = XT2S_0 | LFXT1S_0 | XCAP_1;
+
+	/*do {
+        IFG1 &= ~OFIFG; // Clear OSC fault flag
+        __delay_cycles(50);  // 50us delay
+    } while (IFG1 & OFIFG);
+	*/
+	WDTCTL = WDTPW | WDTTMSEL | WDTSSEL;
+#else
+	BCSCTL3 |= LFXT1S_2;                  // VLOCLK
+
+	BCSCTL1 = CALBC1_1MHZ;                // Set DCO to calibrated 1 MHz.
+	DCOCTL = CALDCO_1MHZ;
+
+	//BCSCTL1 |= DIVA_0;  // ACLK / 8
+	BCSCTL3 |= XCAP_3;
+#endif
 	// Init timer1
 	//
 	TA0CCR0   = 0x7FFF;
 	TA0CCTL0  = CCIE;
-	TA0CTL = TASSEL_1 + MC_1 + ID_0; // SMCLK, up to CCR0, divider /8
+	TA0CTL = TASSEL_1 + MC_1 + ID_0; // ACLK, up to CCR0, divider /1
 
 	// Init timer2
 	//
 	TA1CCR0   = 0x3FFF;
 	TA1CCTL0  = CCIE;
-	TA1CTL = TASSEL_1 + MC_1 + ID_0; // SMCLK, up to CCR0, divider /8
+	TA1CTL = TASSEL_1 + MC_1 + ID_0; // ACLK, up to CCR0, divider /1
 
 	// Init timer3
 	//
@@ -142,7 +186,11 @@ int main()
 	app_init();
 
 
+	uart_num(BCSCTL1);
 	uart_str("main\n");
+
+	//if (BCSCTL3 & LFXT1OF)
+	//	uart_str("osc fault\n");
 
 	//__enable_interrupt();
 	while (1) {
