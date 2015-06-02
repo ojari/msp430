@@ -1,9 +1,10 @@
 /**
  * Copyright 2014 Jari Ojanen
  */
-#include <msp430.h>
+#include "hw.h"
 #include <stdio.h>
 #include "main.h"
+#include "uart.h"
 #include "config.h"
 
 unsigned int g_event = 0;
@@ -11,29 +12,46 @@ unsigned int g_event = 0;
 callback cb_timer1 = NULL;
 callback cb_timer2 = NULL;
 callback cb_timer3 = NULL;
+callback cb_uart_tx = NULL;
 
 unsigned char g_rtc_wday = 0;
-unsigned char g_rtc_hour = 22;
-unsigned char g_rtc_min = 0;
+unsigned char g_rtc_hour = 17;
+unsigned char g_rtc_min = 40;
 unsigned char g_rtc_sec = 0;
 
-
+#ifdef GCC
 __attribute__ ((__interrupt__(TIMER0_A0_VECTOR)))
 static void timer1_isr()
+#else
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void timer1_isr(void)
+#endif
 {
 	g_event |= EV_TIMER1;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__ ((__interrupt__(TIMER1_A0_VECTOR)))
 static void timer2_isr()
+#else
+#pragma vector=TIMER1_A0_VECTOR
+__interrupt void timer2_isr(void)
+#endif
 {
+	TA1CCTL0 &= ~CCIFG;
+
 	g_event |= EV_TIMER2;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__ ((__interrupt__(WDT_VECTOR)))
 static void timer3_isr()
+#else
+#pragma vector=WDT_VECTOR
+__interrupt void timer3_isr(void)
+#endif
 {
 	g_rtc_sec++;
 	if (g_rtc_sec > 59) {
@@ -56,30 +74,54 @@ static void timer3_isr()
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(PORT1_VECTOR)))
 static void port1_isr()
+#else
+#pragma vector=PORT1_VECTOR
+__interrupt void port1_isr(void)
+#endif
 {
 	g_event |= EV_PORT1;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(PORT2_VECTOR)))
 static void port2_isr()
+#else
+#pragma vector=PORT2_VECTOR
+__interrupt void port2_isr(void)
+#endif
 {
 	g_event |= EV_PORT2;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(USCIAB0TX_VECTOR)))
 static void usci_tx_isr()
+#else
+#pragma vector=USCIAB0TX_VECTOR
+__interrupt void usci_tx_isr(void)
+#endif
 {
+	IFG2 &= ~UCA0TXIFG;
+
 	g_event |= EV_TX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+#ifdef GCC
 __attribute__((__interrupt__(USCIAB0RX_VECTOR)))
 static void usci_rx_isr()
+#else
+#pragma vector=USCIAB0RX_VECTOR
+__interrupt void usci_rx_isr(void)
+#endif
 {
+	IFG2 &= ~UCA0RXIFG;
+
 	g_event |= EV_RX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
@@ -134,7 +176,7 @@ void uart_num(uint8_t num)
 }
 
 //------------------------------------------------------------------------------
-int main()
+void main()
 {
 	WDTCTL = WDTPW + WDTHOLD;             // Stop watchdog timer
 #if 1
@@ -185,7 +227,6 @@ int main()
 	config_port_init();
 	app_init();
 
-
 	uart_num(BCSCTL1);
 	uart_str("main\n");
 
@@ -212,7 +253,11 @@ int main()
 				cb_timer3();
 			g_event &= ~EV_TIMER3;
 		}
+		if (g_event & EV_TX) {
+			if (cb_uart_tx)
+				cb_uart_tx();
+			g_event &= ~EV_TX;
+		}
 			
 	}
-	return 0;
 }

@@ -63,7 +63,6 @@ void lcd_str(const char *s)
 	}
 }
 
-
 // Prints one character into display
 //
 void lcd_write(uint8_t value)

@@ -15,7 +15,7 @@ void timer1()
 
 void timer2()
 {
-	toggle_LED_GREEN;
+	//toggle_LED_GREEN;
 }
 
 void dummy()
