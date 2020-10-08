@@ -7,84 +7,33 @@ void config_port_init (void)
 	P2DIR = BIT0 + BIT2 + BIT3 + BIT4 + BIT5;
 }
 
-void config_port_set (uint8_t pin)
-{
-	switch (pin)
-	{
-		case PIN_LED_RED:
-			P1OUT |= BIT0;
-			break;
-		case PIN_OW1:
-			P1OUT |= BIT3;
-			break;
-		case PIN_OW2:
-			P1OUT |= BIT4;
-			break;
-		case PIN_LCD_RS:
-			P1OUT |= BIT5;
-			break;
-		case PIN_LED_GREEN:
-			P1OUT |= BIT6;
-			break;
-		case PIN_LCD_ENABLE:
-			P1OUT |= BIT7;
-			break;
-		case PIN_NEXA_OUT:
-			P2OUT |= BIT0;
-			break;
-		case PIN_LCD_DATA1:
-			P2OUT |= BIT2;
-			break;
-		case PIN_LCD_DATA2:
-			P2OUT |= BIT3;
-			break;
-		case PIN_LCD_DATA3:
-			P2OUT |= BIT4;
-			break;
-		case PIN_LCD_DATA4:
-			P2OUT |= BIT5;
-			break;
-	}
-}
+struct PinData {
+	volatile unsigned char *port;
+	uint8_t bit;
+};
 
-void config_port_clear (uint8_t pin)
+struct PinData PORT_DATA[] = {
+	[PIN_LED_RED] = { &P1OUT, BIT0 },
+	[PIN_OW1] = { &P1OUT, BIT3},
+	[PIN_OW2] = { &P1OUT, BIT4},
+	[PIN_LCD_RS] = { &P1OUT, BIT5},
+	[PIN_LED_GREEN] = { &P1OUT, BIT6},
+	[PIN_LCD_ENABLE] = { &P1OUT, BIT7},
+	[PIN_NEXA_OUT] = { &P2OUT, BIT0},
+	[PIN_LCD_DATA1] = { &P2OUT, BIT2},
+	[PIN_LCD_DATA2] = { &P2OUT, BIT3},
+	[PIN_LCD_DATA3] = { &P2OUT, BIT4},
+	[PIN_LCD_DATA4] = { &P2OUT, BIT5},
+};
+
+void digitalWrite(uint8_t pin, uint8_t mode)
 {
-	switch (pin)
-	{
-		case PIN_LED_RED:
-			P1OUT &= ~BIT0;
-			break;
-		case PIN_OW1:
-			P1OUT &= ~BIT3;
-			break;
-		case PIN_OW2:
-			P1OUT &= ~BIT4;
-			break;
-		case PIN_LCD_RS:
-			P1OUT &= ~BIT5;
-			break;
-		case PIN_LED_GREEN:
-			P1OUT &= ~BIT6;
-			break;
-		case PIN_LCD_ENABLE:
-			P1OUT &= ~BIT7;
-			break;
-		case PIN_NEXA_OUT:
-			P2OUT &= ~BIT0;
-			break;
-		case PIN_LCD_DATA1:
-			P2OUT &= ~BIT2;
-			break;
-		case PIN_LCD_DATA2:
-			P2OUT &= ~BIT3;
-			break;
-		case PIN_LCD_DATA3:
-			P2OUT &= ~BIT4;
-			break;
-		case PIN_LCD_DATA4:
-			P2OUT &= ~BIT5;
-			break;
-	}
+	struct PinData pdata = PORT_DATA[pin];
+
+	if (mode)
+		*(pdata.port) |= pdata.bit;
+	else
+		*(pdata.port) &= ~pdata.bit;
 }
 
 void config_port_mode (uint8_t pin, uint8_t out)

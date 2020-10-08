@@ -3,14 +3,17 @@
  *
  * Copyright 2014 Jari Ojanen
  */
-#include <msp430.h>
+#include "hw.h"
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
 
+static uint8_t ledstate = 1;
+
 void timer1()
 {
-	toggle_LED_RED;
+	digitalWrite(PIN_LED_RED, ledstate);
+	ledstate = !ledstate;
 }
 
 void timer2()

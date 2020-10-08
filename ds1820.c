@@ -12,7 +12,7 @@ extern void usart_str(const char*);
 void ds1820_init(uint8_t pin)
 {
 	config_port_mode(pin, MODE_OUTPUT);
-	config_port_set(pin);
+	digitalWrite(pin, HIGH);
 	//	delay_us(5);
 	//	ds1820_reset(pin);
 }
@@ -22,7 +22,7 @@ void ds1820_reset(uint8_t pin)
 	uint8_t presence;
 
 	// do reset
-	config_port_clear(pin);
+	digitalWrite(pin, LOW);
 	delay_us(500);   // min 480us
 	//config_port_set(pin);
 	config_port_mode(pin, MODE_INPUT);
@@ -43,15 +43,15 @@ void ds1820_write(uint8_t pin, uint8_t data)
 	uint8_t i;
 
 	for (i=0; i<8; i++) {
-		config_port_clear(pin);
+		digitalWrite(pin, LOW);
 		if (data & (1<<i)) {      // send bit 1
 			delay_us(5);
-			config_port_set(pin);
+			digitalWrite(pin, HIGH);
 			delay_us(60);
 		}
 		else {                    // send bit 0
 			delay_us(62);
-			config_port_set(pin);
+			digitalWrite(pin, HIGH);
 			delay_us(3);			
 		}
 	}
@@ -62,11 +62,11 @@ uint8_t ds1820_read(uint8_t pin)
 	uint8_t i;
 	uint8_t ret = 0;
 
-	config_port_set(pin);
+	digitalWrite(pin, HIGH);
 	delay_us(2);
 	for (i=1; i; i<<=1) {
 	        delay_us(1);
-		config_port_clear(pin);
+		digitalWrite(pin, LOW);
 		delay_us(4);
 		config_port_mode(pin, MODE_INPUT);
 		delay_us(9);
@@ -75,7 +75,7 @@ uint8_t ds1820_read(uint8_t pin)
 			ret |= i;
 		}
 		delay_us(60);
-		config_port_set(pin);
+		digitalWrite(pin, HIGH);
 		config_port_mode(pin, MODE_OUTPUT);
 		delay_us(4);
 	}

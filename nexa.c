@@ -9,17 +9,17 @@ void nexa_init(void)
 
 void nexa_send_bit(uint8_t bit)
 {
-	set_NEXA_OUT;
+	digitalWrite(PIN_NEXA_OUT, HIGH);
 	delay_us(250);
-	clr_NEXA_OUT;
+	digitalWrite(PIN_NEXA_OUT, LOW);
 	if (bit)
 		delay_us(250);
 	else
 		delay_us(5*250);
 
-	set_NEXA_OUT;
+	digitalWrite(PIN_NEXA_OUT, HIGH);
 	delay_us(250);
-	clr_NEXA_OUT;
+	digitalWrite(PIN_NEXA_OUT, LOW);
 	if (bit)
 		delay_us(5*250);
 	else

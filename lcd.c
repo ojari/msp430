@@ -6,29 +6,39 @@
 void lcd_output(uint8_t);
 
 #define DELAY_1US  __asm__ __volatile__ ("nop")
+#define LIST_END 255
+
+
+uint8_t dataPins[] = {
+	PIN_LCD_DATA1,
+	PIN_LCD_DATA2,
+	PIN_LCD_DATA3,
+	PIN_LCD_DATA4,
+	LIST_END
+};
 
 void lcd_init()
 {
 	uint8_t i;
-	
-	clr_LCD_DATA1;
-	clr_LCD_DATA2;
-	clr_LCD_DATA3;
-	clr_LCD_DATA4;
-	
+
+	i = 0;
+	while (dataPins[i] != LIST_END) {	
+		digitalWrite(dataPins[i], LOW);
+		i++;
+	}
+
 	delay_ms(30);         // Wait for LCD display to bootup
 	delay_ms(20);
 
-	clr_LCD_RS;                       // control lines to initial position
-	clr_LCD_ENABLE;
+	digitalWrite(PIN_LCD_RS, LOW);     // control lines to initial position
+	digitalWrite(PIN_LCD_ENABLE, LOW);
   
 	i = 3;
-	while (i)
-		{
-			lcd_output(0x03);
-			delay_ms(5);      // wait min 5ms
-			i--;
-		}
+	while (i) {
+		lcd_output(0x03);
+		delay_ms(5);      // wait min 5ms
+		i--;
+	}
     lcd_output(0x02);                // set to 4-bit interface
 	delay_ms(1);
 	lcd_command(LCD_FUNCTION);  
@@ -48,7 +58,8 @@ void lcd_clear(void)
 
 void lcd_command(uint8_t value)
 {
-	clr_LCD_RS;
+	digitalWrite(PIN_LCD_RS, LOW);
+
 	lcd_output(value>>4);
 	delay_ms(1);
 	lcd_output(value);
@@ -67,7 +78,8 @@ void lcd_str(const char *s)
 //
 void lcd_write(uint8_t value)
 {
-	set_LCD_RS;
+	digitalWrite(PIN_LCD_RS, HIGH);
+
 	lcd_output(value>>4);
 	delay_us(500);
 	lcd_output(0x0F & value);
@@ -78,22 +90,21 @@ void lcd_write(uint8_t value)
 
 void lcd_output(uint8_t value)
 {
-	clr_LCD_DATA1;
-	clr_LCD_DATA2;
-	clr_LCD_DATA3;
-	clr_LCD_DATA4;
-
-	if (value & 0x01)	set_LCD_DATA1;
-	if (value & 0x02)	set_LCD_DATA2;
-	if (value & 0x04)	set_LCD_DATA3;
-	if (value & 0x08)	set_LCD_DATA4;
-
-	//	P2OUT = (0xC3 & P2OUT) + (0x3C & (value << 2));
+	uint8_t i = 0;
+	while (dataPins[i] != LIST_END) {
+		if (value & (1 << i)) {
+			digitalWrite(dataPins[i], HIGH);
+		}
+		else {
+			digitalWrite(dataPins[i], LOW);
+		}
+		i++;
+	}
 
 	//clr_LCD_ENABLE;
 	//DELAY_1US;
-	set_LCD_ENABLE;
+	digitalWrite(PIN_LCD_ENABLE, HIGH);
 	delay_us(5);
-	clr_LCD_ENABLE;
+	digitalWrite(PIN_LCD_ENABLE, LOW);
 	delay_us(400);
 }

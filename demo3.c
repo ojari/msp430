@@ -21,15 +21,19 @@
 uint8_t stage;
 uint8_t temp1;
 uint8_t temp2;
+uint8_t led1_state = 1;
+uint8_t led2_state = 1;
 
 void timer1()
 {
-	toggle_LED_GREEN;
+  digitalWrite(PIN_LED_GREEN, led1_state);
+  led1_state = !led1_state;
 }
 
 void timer3()
 {
-  toggle_LED_RED;
+  digitalWrite(PIN_LED_RED, led2_state);
+  led2_state = !led2_state;
 
   switch (stage) {
   case 0:

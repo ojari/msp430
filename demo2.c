@@ -3,7 +3,7 @@
  *
  * Copyright 2014 Jari Ojanen
  */
-#include <msp430.h>
+#include "hw.h"
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
