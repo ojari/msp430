@@ -1,7 +1,6 @@
 #include "hw.h"
 #include "lcd.h"
 #include <string.h>
-#include <inttypes.h>
 
 void lcd_output(uint8_t);
 

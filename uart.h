@@ -1,8 +1,7 @@
 /**
  * Copyright 2014 Jari Ojanen
  */
-#ifndef UART_H_
-#define UART_H_
+#pragma once
 
 extern void uart_init();
 extern void uart_clear();
@@ -12,5 +11,3 @@ extern void uart_tx(); /// event handler for uart tx IRQ
 extern void uart_ch(char ch);
 extern void uart_str(char *str);
 extern void uart_num(uint8_t num);
-
-#endif /* UART_H_ */

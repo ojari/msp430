@@ -8,3 +8,5 @@
 /sim/demo.map
 /sim/demo
 /.cproject
+/Debug
+/targetConfigs

@@ -1,9 +1,6 @@
 #include "hw.h"
 #include "ds1820.h"
 
-#define MODE_INPUT  0
-#define MODE_OUTPUT 1
-
 #define USE_DS1820B
 
 extern void ds1820_reset(uint8_t pin);
@@ -11,7 +8,7 @@ extern void usart_str(const char*);
 
 void ds1820_init(uint8_t pin)
 {
-	config_port_mode(pin, MODE_OUTPUT);
+	pinMode(pin, OUTPUT);
 	digitalWrite(pin, HIGH);
 	//	delay_us(5);
 	//	ds1820_reset(pin);
@@ -25,17 +22,17 @@ void ds1820_reset(uint8_t pin)
 	digitalWrite(pin, LOW);
 	delay_us(500);   // min 480us
 	//config_port_set(pin);
-	config_port_mode(pin, MODE_INPUT);
+	pinMode(pin, INPUT);
 
 	// do presense
 	delay_us(80);   // wait for DS1820 to send presence
-	presence = config_port_read(pin);
+	presence = digitalRead(pin);
 	delay_us(300);
 	//if (presence)
 	//	usart_str("E DS1 0\r\n");
 	//else
 	//	usart_str("DS1 found\r\n");
-	config_port_mode(pin, MODE_OUTPUT);
+	pinMode(pin, OUTPUT);
 }
 
 void ds1820_write(uint8_t pin, uint8_t data)
@@ -68,18 +65,17 @@ uint8_t ds1820_read(uint8_t pin)
 	        delay_us(1);
 		digitalWrite(pin, LOW);
 		delay_us(4);
-		config_port_mode(pin, MODE_INPUT);
+		pinMode(pin, INPUT);
 		delay_us(9);
-		if (config_port_read(pin)) {
+		if (digitalRead(pin)) {
 		//if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13)) {
 			ret |= i;
 		}
 		delay_us(60);
 		digitalWrite(pin, HIGH);
-		config_port_mode(pin, MODE_OUTPUT);
+		pinMode(pin, OUTPUT);
 		delay_us(4);
 	}
-	
 	return ret;
 }
 

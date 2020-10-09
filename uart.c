@@ -8,7 +8,7 @@ uint8_t *uart_ptr = 0;
 
 uint8_t uart_buffer[UART_BUFFER_SIZE];
 
-char hexDigit[] = "0123456789ABCDEF";
+const char hexDigit[] = "0123456789ABCDEF";
 
 void uart_init()
 {

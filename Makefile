@@ -2,10 +2,11 @@ TARGET   = demo
 MCU      = msp430g2553
 #SRCS     = main.c demo1.c config.c
 #SRCS     = main.c demo2.c config.c lcd.c
-SRCS     = main.c demo3.c config.c lcd.c nexa.c ds1820.cd
+SRCS     = main.c demo3.c config.c nexa.c ds1820.c uart.c
+#SRCS     = main.c demo3.c config.c lcd.c nexa.c ds1820.c uart.c
 #SRCS     = main.c config.c lcd.c ds1820.c nexa.c demo3.c
 
-CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc
+CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc -DGCC
 ASFLAGS  = -mmcu=$(MCU) -x assembler-with-cpp -Wa,-gstabs
 LDFLAGS  = -mmcu=$(MCU) -g -Os -Wl,-Map=$(TARGET).map
 

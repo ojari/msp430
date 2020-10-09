@@ -126,7 +126,7 @@ __interrupt void usci_rx_isr(void)
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
-void uart_init()
+/*void uart_init()
 {
 #define TX BIT2
 #define RX BIT1
@@ -142,41 +142,9 @@ void uart_init()
 	UCA0CTL1 &= ~UCSWRST;
 	UC0IE |= UCA0RXIE;
 }
-
-void uart_ch(char ch)
-{
-	while ( !(IFG2 & UCA0TXIFG));
-	UCA0TXBUF = ch;
-}
-
-void uart_str(char *str)
-{
-    while(*str) {
-		while ( !(IFG2 & UCA0TXIFG));
-		UCA0TXBUF = *str;
-        str++;
-    }
-}
-
-void uart_num(uint8_t num)
-{
-	char digit0, digit1, digit2='0';
-
-	digit0 = '0'+(num % 10);
-	num /= 10;
-	digit1 = '0'+(num % 10);
-
-	if (num > 10) {
-		num /= 10;
-		digit2 = '0'+(num % 10);
-		uart_ch(digit2);
-	}
-	uart_ch(digit1);
-	uart_ch(digit0);
-}
-
+*/
 //------------------------------------------------------------------------------
-void main()
+int main()
 {
 	WDTCTL = WDTPW + WDTHOLD;             // Stop watchdog timer
 #if 1
@@ -227,8 +195,7 @@ void main()
 	config_port_init();
 	app_init();
 
-	uart_num(BCSCTL1);
-	uart_str("main\n");
+	uart_ch('S');
 
 	//if (BCSCTL3 & LFXT1OF)
 	//	uart_str("osc fault\n");
@@ -258,6 +225,6 @@ void main()
 				cb_uart_tx();
 			g_event &= ~EV_TX;
 		}
-			
 	}
+	return 0;
 }
