@@ -3,10 +3,10 @@
 
 #define USE_DS1820B
 
-extern void ds1820_reset(uint8_t pin);
+extern void ds1820_reset(uint16_t pin);
 extern void usart_str(const char*);
 
-void ds1820_init(uint8_t pin)
+void ds1820_init(uint16_t pin)
 {
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, HIGH);
@@ -14,7 +14,7 @@ void ds1820_init(uint8_t pin)
 	//	ds1820_reset(pin);
 }
 
-void ds1820_reset(uint8_t pin)
+void ds1820_reset(uint16_t pin)
 {
 	uint8_t presence;
 
@@ -35,7 +35,7 @@ void ds1820_reset(uint8_t pin)
 	pinMode(pin, OUTPUT);
 }
 
-void ds1820_write(uint8_t pin, uint8_t data)
+void ds1820_write(uint16_t pin, uint8_t data)
 {
 	uint8_t i;
 
@@ -79,7 +79,7 @@ uint8_t ds1820_read(uint8_t pin)
 	return ret;
 }
 
-void ds1820_measure(uint8_t pin)
+void ds1820_measure(uint16_t pin)
 {
 	ds1820_reset(pin);
 	ds1820_write(pin, DS1820_CMD_SKIP_ROM);
@@ -88,7 +88,7 @@ void ds1820_measure(uint8_t pin)
 
 // based on DS18S20 OPERATION EXAMPLE 3
 //
-uint8_t ds1820_read_temp(uint8_t pin)
+uint8_t ds1820_read_temp(uint16_t pin)
 {
 	uint8_t temp_lsb;
 	uint8_t temp_msb;

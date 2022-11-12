@@ -14,7 +14,7 @@
 #include "config.h"
 //#include "lcd.h"
 #include "ds1820.h"
-#include "nexa.h"
+#include "nrf24.h"
 #include "uart.h"
 #endif
 
@@ -26,14 +26,18 @@ uint8_t led2_state = 1;
 
 void timer1()
 {
-  digitalWrite(PIN_LED_GREEN, led1_state);
+  digitalWrite(P_LED_RED, led1_state);
   led1_state = !led1_state;
 }
 
 void timer3()
 {
-  digitalWrite(PIN_LED_RED, led2_state);
-  led2_state = !led2_state;
+  //digitalWrite(PIN_LED_RED, led2_state);
+  //led2_state = !led2_state;
+
+  if (nrf24_available()) {
+    uart_ch('R');
+  }
 
   switch (stage) {
   case 0:
@@ -53,17 +57,17 @@ void timer3()
     uart_start();
     break;
   case 1:
-    ds1820_measure(PIN_OW1);
+    ds1820_measure(P2_0);
     break;
   case 2:
-    temp1 = ds1820_read_temp(PIN_OW1);
+    temp1 = ds1820_read_temp(P2_0);
     break;
   case 3:
-    ds1820_measure(PIN_OW2);
+    ds1820_measure(P2_1);
     break;
   case 4:
     //_disable_interrupts();
-    temp2 = ds1820_read_temp(PIN_OW2);
+    temp2 = ds1820_read_temp(P2_1);
     //_enable_interrupts();
     break;
   case 5:
@@ -75,7 +79,7 @@ void timer3()
     //lcd_str("Hello");
     break;
   case 7:
-    nexa_send(NEXA_CH_1, NEXA_UNIT_1, NEXA_ON);
+    //nexa_send(NEXA_CH_1, NEXA_UNIT_1, NEXA_ON);
     break;
   }
 
@@ -92,8 +96,9 @@ void app_init()
 	cb_uart_tx = uart_tx;
 	stage = 0;
 
-	nexa_init();
+	nrf24_init();
+  nrf24_begin(0, 70);
 	//lcd_init();
-	ds1820_init(PIN_OW1);
-	ds1820_init(PIN_OW2);
+	ds1820_init(P2_0);
+	ds1820_init(P2_1);
 }

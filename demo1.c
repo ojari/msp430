@@ -12,7 +12,7 @@ static uint8_t ledstate = 1;
 
 void timer1()
 {
-	digitalWrite(PIN_LED_RED, ledstate);
+	digitalWrite(P_LED_RED, ledstate);
 	ledstate = !ledstate;
 }
 
