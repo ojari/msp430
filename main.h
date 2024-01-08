@@ -27,6 +27,7 @@ extern unsigned char g_rtc_hour;
 extern unsigned char g_rtc_wday;
 
 extern void app_init();
+extern void app_begin();
 extern void uart_str(char *str);
 extern void uart_num(uint8_t num);
 extern unsigned char g_rtc_wday;

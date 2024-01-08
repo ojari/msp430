@@ -30,7 +30,6 @@
 #define NRF24_CMD_FLUSH_RX  0xE2
 #define NRF24_CMD_NOP       0xFF
 
-extern void nrf24_init();
 extern void nrf24_begin(uint8_t datarate, uint8_t channel);
 extern void nrf24_set_rx_address(uint8_t *addr);
 extern void nrf24_enable_rx();

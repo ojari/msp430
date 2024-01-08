@@ -2,7 +2,11 @@
 #define _HW_H
 
 #include <msp430g2553.h>
-#include <inttypes.h>
+//#include <inttypes.h> // for GCC
+
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+
 #include "config.h"
 
 #define delay_us(x)  __delay_cycles(x)

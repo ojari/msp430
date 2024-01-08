@@ -5,10 +5,9 @@
 #define PIN_NRF_CE  P2_4
 #define PIN_NRF_CSN P2_3
 
-void nrf24_init()
-{
-    spi_begin();
 
+void nrf24_begin(uint8_t datarate, uint8_t channel)
+{
     digitalWrite(PIN_NRF_CE, LOW);
     digitalWrite(PIN_NRF_CSN, HIGH);
 
@@ -26,11 +25,6 @@ void nrf24_init()
     nrf24_reg(NRF24_CMD_FLUSH_RX, NRF24_CMD_NOP);
 
     nrf24_reg(NRF24_REG_RF_CH, 10);
-}
-
-void nrf24_begin(uint8_t datarate, uint8_t channel)
-{
-
 }
 
 uint8_t nrf24_available()

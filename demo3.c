@@ -12,10 +12,10 @@
 #include <stdio.h>
 #include "main.h"
 #include "config.h"
-//#include "lcd.h"
 #include "ds1820.h"
 #include "nrf24.h"
 #include "uart.h"
+#include "spi.h"
 #endif
 
 uint8_t stage;
@@ -70,17 +70,6 @@ void timer3()
     temp2 = ds1820_read_temp(P2_1);
     //_enable_interrupts();
     break;
-  case 5:
-    //uart_str("  ");
-    //uart_num(temp1);
-    break;
-  case 6:
-    //lcd_clear();
-    //lcd_str("Hello");
-    break;
-  case 7:
-    //nexa_send(NEXA_CH_1, NEXA_UNIT_1, NEXA_ON);
-    break;
   }
 
   stage++;
@@ -95,10 +84,14 @@ void app_init()
 
 	cb_uart_tx = uart_tx;
 	stage = 0;
+    spi_init();
+	uart_init();
+}
 
-	nrf24_init();
-  nrf24_begin(0, 70);
-	//lcd_init();
-	ds1820_init(P2_0);
-	ds1820_init(P2_1);
+void app_begin()
+{
+    nrf24_begin(0, 70);
+ 
+	ds1820_begin(P2_0);
+	ds1820_begin(P2_1);
 }

@@ -98,6 +98,7 @@ __interrupt void port2_isr(void)
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
 
+/*
 #ifdef GCC
 __attribute__((__interrupt__(USCIAB0TX_VECTOR)))
 static void usci_tx_isr()
@@ -110,8 +111,9 @@ __interrupt void usci_tx_isr(void)
 
 	g_event |= EV_TX;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+} */
 
+/*
 #ifdef GCC
 __attribute__((__interrupt__(USCIAB0RX_VECTOR)))
 static void usci_rx_isr()
@@ -125,7 +127,7 @@ __interrupt void usci_rx_isr(void)
 	g_event |= EV_RX;
 	__bic_SR_register_on_exit(LPM0_bits);
 } 
-
+*/
 /*void uart_init()
 {
 #define TX BIT2
@@ -188,12 +190,15 @@ int main()
 	WDTCTL = WDT_ADLY_1000;
 	IE1 |= WDTIE;
 
-	uart_init();
 
 	// main loop
 	//
 	config_port_init();
-	app_init();
+    app_init();
+    
+    __enable_interrupt();
+    
+	app_begin();
 
 	uart_ch('S');
 
@@ -202,8 +207,9 @@ int main()
 
 	//__enable_interrupt();
 	while (1) {
-		if (g_event == 0)
-			__bis_SR_register(LPM0_bits + GIE);
+         if (g_event == 0) {
+			//__bis_SR_register(LPM0_bits + GIE);
+         }
 
 		if (g_event & EV_TIMER1) {
 			if (cb_timer1)

@@ -1,10 +1,11 @@
 TARGET   = demo
 MCU      = msp430g2553
-#SRCS     = main.c demo1.c config.c
-#SRCS     = main.c demo2.c config.c lcd.c
-SRCS     = main.c demo3.c config.c nexa.c ds1820.c uart.c
-#SRCS     = main.c demo3.c config.c lcd.c nexa.c ds1820.c uart.c
-#SRCS     = main.c config.c lcd.c ds1820.c nexa.c demo3.c
+OBJDIR   = bin
+
+MSP_FILES = $(OBJDIR)\config.o $(OBJDIR)\uart.o $(OBJDIR)\spi.o
+DRV_FILES = $(OBJDIR)\ds1820.o $(OBJDIR)\nrf24.o
+
+OBJS     = $(OBJDIR)\main.o $(OBJDIR)\demo3.o $(DRV_FILES) $(MSP_FILES)
 
 CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc -DGCC
 ASFLAGS  = -mmcu=$(MCU) -x assembler-with-cpp -Wa,-gstabs
@@ -16,8 +17,6 @@ SIZE     = msp430-elf-size
 #RM       = rm -f
 RM       = del
 MSPDEBUG = mspdebug
-
-OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET).elf $(TARGET).hex
 
@@ -33,7 +32,7 @@ $(TARGET).elf: $(OBJS)
 	$(OBJCOPY) -O ihex $< $@
 
 #%.o: %.c
-.c.o:
+.c{$(OBJDIR)}.o:
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 %.lst: %.c
@@ -42,12 +41,13 @@ $(TARGET).elf: $(OBJS)
 .SILENT:
 .PHONY:	clean erase prog gen
 clean:
-	-$(RM) $(OBJS) $(TARGET).* $(SRCS:.c=.lst)
+# echo $(OBJS)
+	$(RM) $(OBJS) $(TARGET).*
 
 erase:
 	$(MSPDEBUG) rf2500 "erase"
 
-prog:
+flash:
 	$(MSPDEBUG) rf2500 "prog $(TARGET).elf"
 
 gen:

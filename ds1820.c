@@ -6,7 +6,7 @@
 extern void ds1820_reset(uint16_t pin);
 extern void usart_str(const char*);
 
-void ds1820_init(uint16_t pin)
+void ds1820_begin(uint16_t pin)
 {
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, HIGH);
