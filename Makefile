@@ -1,15 +1,16 @@
 TARGET   = demo
 MCU      = msp430g2553
 OBJDIR   = bin
+GCC_PATH = \usr\msp430-gcc-9.3.1.11
 
 MSP_FILES = $(OBJDIR)\config.o $(OBJDIR)\uart.o $(OBJDIR)\spi.o
 DRV_FILES = $(OBJDIR)\ds1820.o $(OBJDIR)\nrf24.o
 
 OBJS     = $(OBJDIR)\main.o $(OBJDIR)\demo3.o $(DRV_FILES) $(MSP_FILES)
 
-CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc -DGCC
+CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc -DGCC -I$(GCC_PATH)\include
 ASFLAGS  = -mmcu=$(MCU) -x assembler-with-cpp -Wa,-gstabs
-LDFLAGS  = -mmcu=$(MCU) -g -Os -Wl,-Map=$(TARGET).map
+LDFLAGS  = -mmcu=$(MCU) -g -Os -Wl,-Map=$(TARGET).map -L$(GCC_PATH)\include
 
 CC       = msp430-elf-gcc
 OBJCOPY  = msp430-elf-objcopy

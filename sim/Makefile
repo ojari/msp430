@@ -1,5 +1,5 @@
 TARGET   = demo
-SRCS     = main.c ../demo3.c
+SRCS     = main.c ../demo3.c ../ds1820.c ../nrf24.c sim_spi.c sim_config.c sim_uart.c
 
 CFLAGS   = -g -Os -Wall -Wunused -I.. -D_SIMULATED_   
 LDFLAGS  = -g -Os -Wl,-Map=$(TARGET).map

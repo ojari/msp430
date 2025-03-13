@@ -4,19 +4,19 @@
  * Copyright 2014 Jari Ojanen
  */
 #ifdef _SIMULATED_
-#include <stdio.h>
-#include "main.h"
-#include "port_sim.h"
+  #include <stdio.h>
+  #include <stdint.h>
+  #include "main.h"
 #else
-#include "hw.h"
-#include <stdio.h>
-#include "main.h"
-#include "config.h"
+  #include "hw.h"
+  #include <stdio.h>
+  #include "main.h"
+  #include "config.h"
+#endif
 #include "ds1820.h"
 #include "nrf24.h"
 #include "uart.h"
 #include "spi.h"
-#endif
 
 uint8_t stage;
 uint8_t temp1;

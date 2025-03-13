@@ -1,7 +1,5 @@
-#ifndef _LCD_H
-#define _LCD_H
+#pragma once
 
-//#include <msp430.h>
 #include <stdlib.h>
 
 // HD44780 commands. Command parameters are hard coded into commands.
@@ -28,5 +26,3 @@ extern void lcd_clear(void);
 extern void lcd_str(const char *s);
 extern void lcd_write(uint8_t ch);
 extern void lcd_command(uint8_t cmd);
-
-#endif

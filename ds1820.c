@@ -39,6 +39,11 @@ void ds1820_write(uint16_t pin, uint8_t data)
 {
 	uint8_t i;
 
+#ifdef _SIMULATED_
+	reg_simulator(MODULE_DS1820, data, 0);
+	return;
+#endif
+
 	for (i=0; i<8; i++) {
 		digitalWrite(pin, LOW);
 		if (data & (1<<i)) {      // send bit 1
@@ -58,6 +63,10 @@ uint8_t ds1820_read(uint8_t pin)
 {
 	uint8_t i;
 	uint8_t ret = 0;
+
+#ifdef _SIMULATED_
+	return reg_simulator(MODULE_DS1820, 0xFF, 0xFF);
+#endif
 
 	digitalWrite(pin, HIGH);
 	delay_us(2);

@@ -1,8 +1,7 @@
 /**
  * Copyright 2014 Jari Ojanen
  */
-#ifndef _MAIN_H
-#define _MAIN_H
+#pragma once
 
 extern unsigned int g_events;
 
@@ -35,15 +34,15 @@ extern unsigned char g_rtc_hour;
 extern unsigned char g_rtc_min;
 extern unsigned char g_rtc_sec;
 
-
-#define START_TIMER1(delay,fn) TA0CCR0 = delay; cb_timer1 = fn
-#define START_TIMER2(delay,fn) TA1CCR0 = delay; cb_timer2 = fn
-#define START_TIMER3(fn) cb_timer3 = fn
-
 #ifdef _SIMULATED_
+#define START_TIMER1(delay,fn) cb_timer1 = fn
+#define START_TIMER2(delay,fn) cb_timer2 = fn
+#define START_TIMER3(fn) cb_timer3 = fn
 extern void bit_set(const char*);
 extern void bit_clr(const char*);
 extern void bit_toggle(const char*);
-#endif
-
+#else
+#define START_TIMER1(delay,fn) TA0CCR0 = delay; cb_timer1 = fn
+#define START_TIMER2(delay,fn) TA1CCR0 = delay; cb_timer2 = fn
+#define START_TIMER3(fn) cb_timer3 = fn
 #endif

@@ -1,5 +1,4 @@
-#ifndef _NEXA_H
-#define _NEXA_H
+#pragma once
 
 #define NEXA_UNIT_1    0x03
 #define NEXA_UNIT_2    0x02
@@ -16,5 +15,3 @@
 
 extern void nexa_init(void);
 extern void nexa_send(uint8_t channel, uint8_t unit, uint8_t status);
-
-#endif

@@ -1,6 +1,8 @@
 *~
 *.o
 *.o2
+bin/
+demo.exe
 /demo.map
 demo.hex
 demo.elf
