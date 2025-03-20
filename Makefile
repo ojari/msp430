@@ -10,7 +10,7 @@ OBJS     = $(OBJDIR)\main.o $(OBJDIR)\demo3.o $(DRV_FILES) $(MSP_FILES)
 
 CFLAGS   = -mmcu=$(MCU) -g -Os -Wall -Wunused -Iinc -DGCC -I$(GCC_PATH)\include
 ASFLAGS  = -mmcu=$(MCU) -x assembler-with-cpp -Wa,-gstabs
-LDFLAGS  = -mmcu=$(MCU) -g -Os -Wl,-Map=$(TARGET).map -L$(GCC_PATH)\include
+LDFLAGS  = -mmcu=$(MCU) -g -Os -Wl,-Map=$(OBJDIR)/$(TARGET).map -L$(GCC_PATH)\include
 
 CC       = msp430-elf-gcc
 OBJCOPY  = msp430-elf-objcopy
@@ -19,12 +19,14 @@ SIZE     = msp430-elf-size
 RM       = del
 MSPDEBUG = mspdebug
 
-all: $(TARGET).elf $(TARGET).hex
+TARGET_DIR=$(OBJDIR)/$(TARGET)
 
-$(TARGET).hex: $(TARGET).elf
-	$(OBJCOPY) -O ihex $(TARGET).elf $(TARGET).hex
+all: $(TARGET_DIR).elf $(TARGET_DIR).hex
 
-$(TARGET).elf: $(OBJS)
+$(TARGET_DIR).hex: $(TARGET_DIR).elf
+	$(OBJCOPY) -O ihex $(TARGET_DIR).elf $(TARGET_DIR).hex
+
+$(TARGET_DIR).elf: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o $@
 	$(SIZE) $@
 
@@ -53,3 +55,6 @@ flash:
 
 gen:
 	cd ../CodeGen; python msp430.py
+
+lint:
+	cpplint --extensions=c --recursive --exclude=_msp .

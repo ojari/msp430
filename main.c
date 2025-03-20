@@ -1,8 +1,8 @@
 /**
  * Copyright 2014 Jari Ojanen
  */
-#include "hw.h"
 #include <stdio.h>
+#include "hw.h"
 #include "main.h"
 #include "uart.h"
 #include "config.h"
@@ -20,22 +20,22 @@ unsigned char g_rtc_min = 40;
 unsigned char g_rtc_sec = 0;
 
 #ifdef GCC
-__attribute__ ((__interrupt__(TIMER0_A0_VECTOR)))
+__attribute__((__interrupt__(TIMER0_A0_VECTOR)))
 static void timer1_isr()
 #else
-#pragma vector=TIMER0_A0_VECTOR
+#pragma vector = TIMER0_A0_VECTOR
 __interrupt void timer1_isr(void)
 #endif
 {
 	g_event |= EV_TIMER1;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+}
 
 #ifdef GCC
-__attribute__ ((__interrupt__(TIMER1_A0_VECTOR)))
+__attribute__((__interrupt__(TIMER1_A0_VECTOR)))
 static void timer2_isr()
 #else
-#pragma vector=TIMER1_A0_VECTOR
+#pragma vector = TIMER1_A0_VECTOR
 __interrupt void timer2_isr(void)
 #endif
 {
@@ -43,13 +43,13 @@ __interrupt void timer2_isr(void)
 
 	g_event |= EV_TIMER2;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+}
 
 #ifdef GCC
-__attribute__ ((__interrupt__(WDT_VECTOR)))
+__attribute__((__interrupt__(WDT_VECTOR)))
 static void timer3_isr()
 #else
-#pragma vector=WDT_VECTOR
+#pragma vector = WDT_VECTOR
 __interrupt void timer3_isr(void)
 #endif
 {
@@ -69,34 +69,34 @@ __interrupt void timer3_isr(void)
 			}
 		}
 	}
-	//toggle_LED_RED;
+	// toggle_LED_RED;
 	g_event |= EV_TIMER3;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+}
 
 #ifdef GCC
 __attribute__((__interrupt__(PORT1_VECTOR)))
 static void port1_isr()
 #else
-#pragma vector=PORT1_VECTOR
+#pragma vector = PORT1_VECTOR
 __interrupt void port1_isr(void)
 #endif
 {
 	g_event |= EV_PORT1;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+}
 
 #ifdef GCC
 __attribute__((__interrupt__(PORT2_VECTOR)))
 static void port2_isr()
 #else
-#pragma vector=PORT2_VECTOR
+#pragma vector = PORT2_VECTOR
 __interrupt void port2_isr(void)
 #endif
 {
 	g_event |= EV_PORT2;
 	__bic_SR_register_on_exit(LPM0_bits);
-} 
+}
 
 /*
 #ifdef GCC
@@ -146,8 +146,7 @@ __interrupt void usci_rx_isr(void)
 }
 */
 //------------------------------------------------------------------------------
-int main()
-{
+int main() {
 	WDTCTL = WDTPW + WDTHOLD;             // Stop watchdog timer
 #if 1
 	BCSCTL2 = SELM_0 | DIVM_0 | DIVS_0;
@@ -170,20 +169,20 @@ int main()
 	BCSCTL1 = CALBC1_1MHZ;                // Set DCO to calibrated 1 MHz.
 	DCOCTL = CALDCO_1MHZ;
 
-	//BCSCTL1 |= DIVA_0;  // ACLK / 8
+	// BCSCTL1 |= DIVA_0;  // ACLK / 8
 	BCSCTL3 |= XCAP_3;
 #endif
 	// Init timer1
 	//
 	TA0CCR0   = 0x7FFF;
 	TA0CCTL0  = CCIE;
-	TA0CTL = TASSEL_1 + MC_1 + ID_0; // ACLK, up to CCR0, divider /1
+	TA0CTL = TASSEL_1 + MC_1 + ID_0;  // ACLK, up to CCR0, divider /1
 
 	// Init timer2
 	//
 	TA1CCR0   = 0x3FFF;
 	TA1CCTL0  = CCIE;
-	TA1CTL = TASSEL_1 + MC_1 + ID_0; // ACLK, up to CCR0, divider /1
+	TA1CTL = TASSEL_1 + MC_1 + ID_0;  // ACLK, up to CCR0, divider /1
 
 	// Init timer3
 	//
@@ -195,20 +194,20 @@ int main()
 	//
 	config_port_init();
     app_init();
-    
+
     __enable_interrupt();
-    
+
 	app_begin();
 
 	uart_ch('S');
 
-	//if (BCSCTL3 & LFXT1OF)
-	//	uart_str("osc fault\n");
+	// if (BCSCTL3 & LFXT1OF)
+	//	 uart_str("osc fault\n");
 
-	//__enable_interrupt();
+	// __enable_interrupt();
 	while (1) {
          if (g_event == 0) {
-			//__bis_SR_register(LPM0_bits + GIE);
+			// __bis_SR_register(LPM0_bits + GIE);
          }
 
 		if (g_event & EV_TIMER1) {

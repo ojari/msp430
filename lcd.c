@@ -1,6 +1,6 @@
+#include <string.h>
 #include "hw.h"
 #include "lcd.h"
-#include <string.h>
 
 void lcd_output(uint8_t);
 
@@ -16,12 +16,11 @@ uint8_t dataPins[] = {
 	LIST_END
 };
 
-void lcd_init()
-{
+void lcd_init() {
 	uint8_t i;
 
 	i = 0;
-	while (dataPins[i] != LIST_END) {	
+	while (dataPins[i] != LIST_END) {
 		digitalWrite(dataPins[i], LOW);
 		i++;
 	}
@@ -31,7 +30,7 @@ void lcd_init()
 
 	digitalWrite(PIN_LCD_RS, LOW);     // control lines to initial position
 	digitalWrite(PIN_LCD_ENABLE, LOW);
-  
+
 	i = 3;
 	while (i) {
 		lcd_output(0x03);
@@ -40,7 +39,7 @@ void lcd_init()
 	}
     lcd_output(0x02);                // set to 4-bit interface
 	delay_ms(1);
-	lcd_command(LCD_FUNCTION);  
+	lcd_command(LCD_FUNCTION);
 	delay_ms(1);
 	lcd_command(LCD_DISPLAY);
 	delay_ms(2);
@@ -49,14 +48,12 @@ void lcd_init()
 	delay_ms(2);
 }
 
-void lcd_clear(void)
-{
+void lcd_clear(void) {
 	lcd_command(LCD_RETURN_HOME);
 	delay_ms(2);
 }
 
-void lcd_command(uint8_t value)
-{
+void lcd_command(uint8_t value) {
 	digitalWrite(PIN_LCD_RS, LOW);
 
 	lcd_output(value>>4);
@@ -65,8 +62,7 @@ void lcd_command(uint8_t value)
 	delay_ms(1);
 }
 
-void lcd_str(const char *s)
-{
+void lcd_str(const char *s) {
 	while(*s) {
 		lcd_write(*s);
 		s++;
@@ -75,33 +71,30 @@ void lcd_str(const char *s)
 
 // Prints one character into display
 //
-void lcd_write(uint8_t value)
-{
+void lcd_write(uint8_t value) {
 	digitalWrite(PIN_LCD_RS, HIGH);
 
 	lcd_output(value>>4);
 	delay_us(500);
 	lcd_output(0x0F & value);
 	delay_ms(3);
-	//delay_ms(30);
+	// delay_ms(30);
 }
 
 
-void lcd_output(uint8_t value)
-{
+void lcd_output(uint8_t value) {
 	uint8_t i = 0;
 	while (dataPins[i] != LIST_END) {
 		if (value & (1 << i)) {
 			digitalWrite(dataPins[i], HIGH);
-		}
-		else {
+		} else {
 			digitalWrite(dataPins[i], LOW);
 		}
 		i++;
 	}
 
-	//clr_LCD_ENABLE;
-	//DELAY_1US;
+	// clr_LCD_ENABLE;
+	// DELAY_1US;
 	digitalWrite(PIN_LCD_ENABLE, HIGH);
 	delay_us(5);
 	digitalWrite(PIN_LCD_ENABLE, LOW);

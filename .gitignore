@@ -2,6 +2,7 @@
 *.o
 *.o2
 bin/
+_msp/
 demo.exe
 /demo.map
 demo.hex

@@ -8,8 +8,8 @@
   #include <stdint.h>
   #include "main.h"
 #else
-  #include "hw.h"
   #include <stdio.h>
+  #include "hw.h"
   #include "main.h"
   #include "config.h"
 #endif
@@ -24,16 +24,14 @@ uint8_t temp2;
 uint8_t led1_state = 1;
 uint8_t led2_state = 1;
 
-void timer1()
-{
+void timer1() {
   digitalWrite(P_LED_RED, led1_state);
   led1_state = !led1_state;
 }
 
-void timer3()
-{
-  //digitalWrite(PIN_LED_RED, led2_state);
-  //led2_state = !led2_state;
+void timer3() {
+  // digitalWrite(PIN_LED_RED, led2_state);
+  // led2_state = !led2_state;
 
   if (nrf24_available()) {
     uart_ch('R');
@@ -66,9 +64,9 @@ void timer3()
     ds1820_measure(P2_1);
     break;
   case 4:
-    //_disable_interrupts();
+    // _disable_interrupts();
     temp2 = ds1820_read_temp(P2_1);
-    //_enable_interrupts();
+    // _enable_interrupts();
     break;
   }
 
@@ -77,10 +75,9 @@ void timer3()
     stage = 0;
 }
 
-void app_init()
-{
+void app_init() {
 	START_TIMER1(0x7FFF, timer1);
-	START_TIMER3(timer3);	
+	START_TIMER3(timer3);
 
 	cb_uart_tx = uart_tx;
 	stage = 0;
@@ -88,10 +85,9 @@ void app_init()
 	uart_init();
 }
 
-void app_begin()
-{
-    nrf24_begin(0, 70);
- 
+void app_begin() {
+  nrf24_begin(0, 70);
+
 	ds1820_begin(P2_0);
 	ds1820_begin(P2_1);
 }

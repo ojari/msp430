@@ -6,8 +6,7 @@
 #define PIN_NRF_CSN P2_3
 
 
-void nrf24_begin(uint8_t datarate, uint8_t channel)
-{
+void nrf24_begin(uint8_t datarate, uint8_t channel) {
     digitalWrite(PIN_NRF_CE, LOW);
     digitalWrite(PIN_NRF_CSN, HIGH);
 
@@ -17,9 +16,9 @@ void nrf24_begin(uint8_t datarate, uint8_t channel)
     nrf24_reg(NRF24_REG_AA, 0x03);
     nrf24_reg(NRF24_REG_RXADDR, 0x03);
     nrf24_reg(NRF24_REG_RF_SET, NRF24_RF_PWR_0dBm | NRF24_RF_DR_LOW);
-    //nrf24_reg(NRF24_REG_STATUS, );
+    // nrf24_reg(NRF24_REG_STATUS, );
     nrf24_reg(NRF24_REG_DYNPD, 0x03);
-    //nrf24_reg(NRF24_REG_FEATURE, DYNPAYLOAD);
+    // nrf24_reg(NRF24_REG_FEATURE, DYNPAYLOAD);
 
     nrf24_reg(NRF24_CMD_FLUSH_TX, 0);
     nrf24_reg(NRF24_CMD_FLUSH_RX, 0);
@@ -28,13 +27,11 @@ void nrf24_begin(uint8_t datarate, uint8_t channel)
     nrf24_reg(NRF24_REG_AW, NRF24_AW_3BYTES);
 }
 
-uint8_t nrf24_available()
-{
+uint8_t nrf24_available() {
     return 0;
 }
 
-uint8_t nrf24_reg(uint8_t reg, uint8_t value)
-{
+uint8_t nrf24_reg(uint8_t reg, uint8_t value) {
     uint8_t ret;
 
 #ifdef _SIMULATED_

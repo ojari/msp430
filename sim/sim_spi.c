@@ -1,12 +1,10 @@
-#include "../spi.h"
 #include <stdio.h>
+#include "../spi.h"
 
-void spi_init()
-{  
+void spi_init() {
 }
 
-uint8_t spi_transmit(uint8_t data)
-{
+uint8_t spi_transmit(uint8_t data) {
     printf("SPI: %02x\n", data);
 
     return 0x00;
